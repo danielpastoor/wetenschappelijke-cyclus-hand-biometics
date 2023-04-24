@@ -94,7 +94,7 @@ laborant_ID,subject_ID,handlengte,handbreedte,sexe
 Om data vanuit een tekstbestand in te lezen kan je dit codeblok gebruiken, aannemend dat je data er exact zo uitzien als in bovenstaande voorbeeld:
 
 ```{r demo-data-inlees, eval=FALSE}
-data_file <- "C:\Users\laris\OneDrive\Documenten\bio_info\1.4.1\handbiometrie_1.csv"
+data_file <- "handbiometrie_1.csv"
 
 #data format: laborant_ID,subject_ID,handlengte,handbreedte,sexe
 biometric_data <- read.table(file = data_file,
@@ -119,9 +119,9 @@ Hoe kleiner de steekproefgrootte (_sample size_) hoe lastiger het is de onderlig
 Neem voor _n_ bijvoorbeeld achtereenvolgens 10, 100, 1000, 10000, 10000 en voor _breaks_ 5, 10, 50. Wanneer zie je een echte normaalverdeling verschijnen? 
 
 ```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-hist_data <- data.frame(x = rnorm(n = 100))
-ggplot(data = hist_data,
-       mapping = aes(x = x)) +
+print(biometric_data)
+ggplot(data = biometric_data,
+       mapping = aes(x = id_onderzoeker)) +
     geom_histogram(bins = 10, fill = "gold", colour = "black") +
     theme_minimal()
 ```
