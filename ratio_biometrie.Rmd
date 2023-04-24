@@ -1,6 +1,6 @@
 ---
 title: "Biometrie onderzoek"
-authors: "<Jullie namen>"
+authors: "<Daniël: , Larissa: 432995 en Marian: >"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -21,8 +21,7 @@ library(ggplot2)
 
 
 ## Inleiding
-
-GEEF EEN HEEL KORTE INLEINDING VAN JE ONDERZOEK
+Er wordt onderzocht naar een verhouding tussen hand lengte en hand breedte bij mannen en vrouwen. En eventueel andere relaties, door middel van het opmeten van de dominante hand bij verschillende mensen.
 
 :::info
 Het staat je vrij een ander simpel te meten biometrisch kenmerk te onderzoeken. Voorwaarde is wel dat je twee aspecten meet (bv lichaamslengte en hoofdomtrek) en hun relatie onderzoekt, en ook dat je verschillende groepen onderzoekt (man/vrouw, jong/oud etc.). Ten slotte moeten verschillende studenten het meetwerk afwisselen en ook dat moet vastgelegd worden.
@@ -31,27 +30,25 @@ Het staat je vrij een ander simpel te meten biometrisch kenmerk te onderzoeken. 
 
 
 :::attention
-GEEF HIER JE ONDERZOEKSVRAAG
+Wat is de relatie tussen de hand breedte en de hand lengte bij de verschillende sekse? 
 :::
 
 
 :::attention
-GEEF HIER JE HYPOTHESE
+Mannen hebben een grotere verhouding dan vrouwen tussen hand breedte en hand lengte.
 :::
 
 
 :::attention
-GEEF HIER JE NULHYPOTHESE
+Mannen en vrouwen hebben geen verschil in realtie met hand breedte en hand lengte.
 :::
 
 
 ### Ontwerp van het experiment
 
-> GEEF EEN KORT OVERZICHT VAN JE EXPERIMENT
+Meten van de hand bij 20 mannen en vrouwen van verschillende leeftijden met verschillende soorten lichaamsbouw. Om diversiteit zo groot mogelijk te houden.
 
 ### Ontwerp het protocol
-
-VUL HIER ONDER HET PROTOCOL AAN OF PAS DEZE AAN NAAR JOUW OPZET.
 
 :::protocol
 #### Protocol voor meting handlengte en handbreedte
@@ -66,7 +63,7 @@ VUL HIER ONDER HET PROTOCOL AAN OF PAS DEZE AAN NAAR JOUW OPZET.
 
 Zoek, samen met een ander groepje van je klas, in of rond het schoolgebouw medestudenten. Vraag beleefd of ze willen participeren in een klein wetenschappelijk onderzoekje voor school waarbij de maten van de hand opgenomen zullen worden.  
 Is het antwoord nee, dan groet je vriendelijk en zoek je verder.  
-Is het antwoord ja, dan vraag je of de proefpersoon de hand horizontaal en gestrekt wil houden met de palm naar beneden. Vervolgens meet je zowel de lengte als de breedte van de hand op, in millimeters. Deze leg je vast in de spreadsheet, samen met je laborant-ID en een identifier (géén naam!) van de proefpersoon. Ten slotte vraag je aan de proefpersoon zijn/haar/hun sexe en legt deze vast. Wil de proefpersoon deze niet geven, of is die nonbinair, dan leg je dit vast als "anders/onbekend". Het "parallel groepje" (dat niet jouw bevindingen mag horen) doet dezelfde meting en slaat deze met dezelfde participant identifier op.  
+Is het antwoord ja, dan vraag je of de proefpersoon de dominante hand horizontaal en gestrekt wil houden met de palm naar beneden. Vervolgens meet je zowel de lengte(begin handpalm tot einde langste vinger) als de breedte(gesloten hand van duimknokkel tot pinkknokkel) van de hand op, in millimeters. Deze leg je vast in de spreadsheet, samen met je laborant-ID en een identifier (géén naam!) van de proefpersoon. Ten slotte vraag je aan de proefpersoon zijn/haar/hun sexe en legt deze vast. Wil de proefpersoon deze niet geven, of is die nonbinair, dan leg je dit vast als "anders/onbekend". Het "parallel groepje" (dat niet jouw bevindingen mag horen) doet dezelfde meting en slaat deze met dezelfde participant identifier op.  
 Bedank de proefpersoon voor deelname.  
 Wissel de metingen af tussen de verschillende studenten in jouw groepje.
 
@@ -94,17 +91,22 @@ laborant_ID,subject_ID,handlengte,handbreedte,sexe
 Om data vanuit een tekstbestand in te lezen kan je dit codeblok gebruiken, aannemend dat je data er exact zo uitzien als in bovenstaande voorbeeld:
 
 ```{r demo-data-inlees, eval=FALSE}
-data_file <- "C:/Users/Maria/OneDrive/Music/Documents/bioinf/W cyclus/handje_biometrie_1(1).csv"
+data_file <- "C:/Users/laris/OneDrive/Documenten/bio_info/1.4.1/handbiometrie_1.csv"
 
 #data format: laborant_ID,subject_ID,handlengte,handbreedte,sexe
 biometric_data <- read.table(file = data_file,
                         header = TRUE,
-                        sep = ",")
+                        sep = ";")
+```
+### verwerking van data
+```{r data-verwerk, eval=FALSE}
+# get mean of the 2 different data points
+biometric_dat <- aggregate(.~id_data ,data=biometric_data[ , c('id_data','lengte', 'breedte')], FUN = mean)
+sekse <- biometric_data[20:60, c('sexse')]
+
+biometric_dats <- cbind(biometric_dat, sekse)
 
 ```
-
-Let op: als je missende data hebt moet je die specificeren door dit argument toe te voegen: `na.strings = "<jouw NA symbool>"`
-
 
 ### Beschrijvende statistiek
 
@@ -125,18 +127,15 @@ ggplot(data = hist_data,
     geom_histogram(bins = 10, fill = "gold", colour = "black") +
     theme_minimal()
 
-
+# determine ratio 
 breedte_man_mean <- mean((data[data$sexse == "man", ])$breedte)
 breedte_vrouw_mean <- mean((data[data$sexse == "vrouw", ])$breedte)
 lengte_man_mean <- mean((data[data$sexse == "man", ])$lengte)
 lengte_vrouw_mean <- mean((data[data$sexse == "vrouw", ])$lengte)
 ratio_vrouw <- (lengte_vrouw_mean/breedte_vrouw_mean)
 ratio_man <- (lengte_man_mean/breedte_man_mean)
-print(ratio_man)
-print(ratio_vrouw)
 ```
-
-:::attention
+### Dit moet ff ingevuld worden:)
 **Dit _experiment_ met de argumenten van `rnorm()` en `hist()` moet je opnemen in je eigen RMarkdown.**  
 Beantwoord deze vragen:
 
@@ -145,7 +144,7 @@ Beantwoord deze vragen:
 3. Waarom is bij zelfde instellingen voor `n` en `breaks` de uitkomst toch verschillend?
 4. Welke minimale `n` geeft het meeste kans om een echte normaalverdeling te zien?
 5. Wat voor bijzonders is er aan de hand met het `breaks` argument? Geeft de documentatie daar een verklaring voor?
-:::
+
 
 ### Bronnen van variatie
 
@@ -153,21 +152,26 @@ ONDERZOEK BRONNEN VAN VARIATIE
 BESPREEK DIT KORT
 
 ### De hypothese aannemen?
-
+T-test????
 VOER RELEVANTE STATISTISCHE TESTS UIT
 
 
 ## Reflectie op het experiment
 
-:::info
 Bespreek in je groep de volgende vragen en voeg de antwoorden toe aan je uitgewerkte onderzoeksdocument.  
 
 1. Zijn de metingen tussen de verschillende meters ook (significant) verschillend? Zo ja, waardoor zou je de verschillen kunnen verklaren?
 
+Ze zijn niet significant verschillende, maar er is wel een verschil aanwezig. Dit komt doordat de persoon die gemeten heeft op een andere manier kan kijken vanaf boven en zo een andere lengte ziet. En het ligt er aan hoe accuraat de persoon kijkt.
+
 2. Onderzoek de verschillen tussen mannen en vrouwen met betrekking tot hand lengte, handbreedte en de ratio.
 
+...
+
 3. Zou je het protocol aanpassen na deze ervaring, of was hij voldoende duidelijk en reproduceerbaar?
-:::
+
+Het protocool zelf was duidelijk en reproduceerbaar, alleen om data te verzamelen dat meer betrouwbaar is kan er om meer informatie van de persoon worden gevraagd. Zoals lengte, leeftijd en gewicht van de persoon, deze factoren kunnen ook effect hebben op de verhoudingen van de hand van een persoon.
+
 
 
 :::attention
