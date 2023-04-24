@@ -119,12 +119,22 @@ Hoe kleiner de steekproefgrootte (_sample size_) hoe lastiger het is de onderlig
 Neem voor _n_ bijvoorbeeld achtereenvolgens 10, 100, 1000, 10000, 10000 en voor _breaks_ 5, 10, 50. Wanneer zie je een echte normaalverdeling verschijnen? 
 
 ```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-print(biometric_data)
+
 ggplot(data = biometric_data,
        mapping = aes(x = sexse, y = lengte)) +
       geom_boxplot() +
-      stat_summary(fun = "mean", geom = "point", shape = 8,
-               size = 2, color = "white")
+      stat_summary(fun = "mean", geom = "point",
+               color = "gold")
+
+ggplot(data = biometric_data,
+       mapping = aes(x = sexse, y = breedte)) +
+      geom_boxplot() +
+      stat_summary(fun = "mean", geom = "point",
+               color = "gold")
+
+#+
+    #geom_histogram(bins = 10, fill = "gold", colour = "black") +
+    #theme_minimal()
 ```
 
 :::attention
