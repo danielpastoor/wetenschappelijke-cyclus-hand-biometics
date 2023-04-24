@@ -6,7 +6,9 @@ id_onderzoeker;id_data;lengte;breedte;sexse
 1;3;16.6;9;vrouw
 2;3;16.6;9;vrouw
 1;4;16.8;9.2;vrouw
-2;5;16.9;9.2;vrouw
+2;4;16.9;9.2;vrouw
+1;5;18.7;9.3;vrouw
+2;5;18.7;9.3;vrouw
 1;6;17.3;9.7;vrouw
 2;6;17.3;9.7;vrouw
 1;7;17.5;9.2;vrouw
@@ -37,8 +39,6 @@ id_onderzoeker;id_data;lengte;breedte;sexse
 2;19;18.3;9.6;vrouw
 1;20;18.7;10;vrouw
 2;20;18.7;10;vrouw
-1;21;18.7;9.3;vrouw
-2;21;18.7;9.3;vrouw
 1;22;19.7;10.5;man
 2;22;19.8;10.6;man
 1;23;19;10.7;man
