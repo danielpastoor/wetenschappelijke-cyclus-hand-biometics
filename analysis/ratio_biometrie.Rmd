@@ -1,6 +1,6 @@
 ---
 title: "Biometrie onderzoek"
-authors: "<Daniël, Larissa en Marian>"
+authors: "<Daniël: 452871, Larissa: 432995 en Marian: >"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -21,37 +21,33 @@ library(ggplot2)
 
 
 ## Inleiding
-
-GEEF EEN HEEL KORTE INLEINDING VAN JE ONDERZOEK
+Er wordt onderzocht naar een verhouding tussen hand lengte en hand breedte bij mannen en vrouwen. En eventueel andere relaties, door middel van het opmeten van de dominante hand bij verschillende mensen.
 
 :::info
 Het staat je vrij een ander simpel te meten biometrisch kenmerk te onderzoeken. Voorwaarde is wel dat je twee aspecten meet (bv lichaamslengte en hoofdomtrek) en hun relatie onderzoekt, en ook dat je verschillende groepen onderzoekt (man/vrouw, jong/oud etc.). Ten slotte moeten verschillende studenten het meetwerk afwisselen en ook dat moet vastgelegd worden.
 :::
 
 
-
-:::attention
+## Onderzoeksvraag
 Wat is de relatie tussen de hand breedte en de hand lengte bij de verschillende sekse? 
 :::
 
 
-:::attention
-Mannen hebben hoger hand- breedte en lengte.
-:::
+## 0-Hypothese
+Mannen hebben een grotere verhouding dan vrouwen tussen hand breedte en hand lengte.
 
 
-:::attention
+
+## Hypothese
 Mannen en vrouwen hebben geen verschil in realtie met hand breedte en hand lengte.
-:::
+
 
 
 ### Ontwerp van het experiment
 
-> GEEF EEN KORT OVERZICHT VAN JE EXPERIMENT
+Meten van de hand bij 20 mannen en vrouwen van verschillende leeftijden met verschillende soorten lichaamsbouw. Om diversiteit zo groot mogelijk te houden.
 
 ### Ontwerp het protocol
-
-VUL HIER ONDER HET PROTOCOL AAN OF PAS DEZE AAN NAAR JOUW OPZET.
 
 :::protocol
 #### Protocol voor meting handlengte en handbreedte
@@ -66,7 +62,7 @@ VUL HIER ONDER HET PROTOCOL AAN OF PAS DEZE AAN NAAR JOUW OPZET.
 
 Zoek, samen met een ander groepje van je klas, in of rond het schoolgebouw medestudenten. Vraag beleefd of ze willen participeren in een klein wetenschappelijk onderzoekje voor school waarbij de maten van de hand opgenomen zullen worden.  
 Is het antwoord nee, dan groet je vriendelijk en zoek je verder.  
-Is het antwoord ja, dan vraag je of de proefpersoon de hand horizontaal en gestrekt wil houden met de palm naar beneden. Vervolgens meet je zowel de lengte als de breedte van de hand op, in millimeters. Deze leg je vast in de spreadsheet, samen met je laborant-ID en een identifier (géén naam!) van de proefpersoon. Ten slotte vraag je aan de proefpersoon zijn/haar/hun sexe en legt deze vast. Wil de proefpersoon deze niet geven, of is die nonbinair, dan leg je dit vast als "anders/onbekend". Het "parallel groepje" (dat niet jouw bevindingen mag horen) doet dezelfde meting en slaat deze met dezelfde participant identifier op.  
+Is het antwoord ja, dan vraag je of de proefpersoon de dominante hand horizontaal en gestrekt wil houden met de palm naar beneden. Vervolgens meet je zowel de lengte(begin handpalm tot einde langste vinger) als de breedte(gesloten hand van duimknokkel tot pinkknokkel) van de hand op, in millimeters. Deze leg je vast in de spreadsheet, samen met je laborant-ID en een identifier (géén naam!) van de proefpersoon. Ten slotte vraag je aan de proefpersoon zijn/haar/hun sexe en legt deze vast. Wil de proefpersoon deze niet geven, of is die nonbinair, dan leg je dit vast als "anders/onbekend". Het "parallel groepje" (dat niet jouw bevindingen mag horen) doet dezelfde meting en slaat deze met dezelfde participant identifier op.  
 Bedank de proefpersoon voor deelname.  
 Wissel de metingen af tussen de verschillende studenten in jouw groepje.
 
@@ -94,19 +90,63 @@ laborant_ID,subject_ID,handlengte,handbreedte,sexe
 Om data vanuit een tekstbestand in te lezen kan je dit codeblok gebruiken, aannemend dat je data er exact zo uitzien als in bovenstaande voorbeeld:
 
 ```{r demo-data-inlees, eval=FALSE}
-data_file <- "../raw_data/data.csv"
+data_file <- "raw_data/data.csv"
 
 #data format: laborant_ID,subject_ID,handlengte,handbreedte,sexe
 biometric_data <- read.table(file = data_file,
                         header = TRUE,
                         sep = ";")
+```
+
+```{r data-verwerk, eval=FALSE}
+# get mean of the 2 different data points
+biometric_dat <- aggregate(.~id_data ,data=biometric_data[ , c('id_data','lengte', 'breedte')], FUN = mean)
+sekse <- biometric_data[20:60, c('sexse')]
+
+data <- cbind(biometric_dat, sekse)
+
 
 ```
 
-Let op: als je missende data hebt moet je die specificeren door dit argument toe te voegen: `na.strings = "<jouw NA symbool>"`
-
-
 ### Beschrijvende statistiek
+#### Histogram
+Dit is een histogram van alle verkregen data.
+```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+# histogramm van alle data
+```
+
+#### Boxplot
+Dit is en boxplot van alle verkegen data.
+```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+ggplot(data = data,
+       mapping = aes(x = sekse, y = lengte)) +
+      geom_boxplot() +
+      stat_summary(fun = "mean", geom = "point",
+               color = "gold")
+ggplot(data = data,
+       mapping = aes(x = sekse, y = breedte)) +
+      geom_boxplot() +
+      stat_summary(fun = "mean", geom = "point",
+               color = "gold")
+
+```
+Hier kan er gezien worden dat de gemiddelde hand lengte en hand breedte hoger liggen bij de man dan bij de vrouw. Ook kan er gezien worden dat de gemiddelde handbreedte hoger ligt in het bereik dan bij alle overige data.
+
+#### Ratio bij hand lengte en hand breedte
+Als je de hand lengte deelt door de hand breedte krijg je een ratio. Dit vertelt je hoeveel langer je hand is in vergelijking met je hand breedte. 
+```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+#determine ratio 
+breedte_man_mean <- mean((data[data$sekse == "man", ])$breedte)
+breedte_vrouw_mean <- mean((data[data$sekse == "vrouw", ])$breedte)
+lengte_man_mean <- mean((data[data$sekse == "man", ])$lengte)
+lengte_vrouw_mean <- mean((data[data$sekse == "vrouw", ])$lengte)
+ratio_vrouw <- (lengte_vrouw_mean/breedte_vrouw_mean)
+ratio_man <- (lengte_man_mean/breedte_man_mean)
+
+print(paste("De ratio voor man is: ", ratio_man))
+print(paste("De ratio voor vrouw is: ", ratio_vrouw))
+
+```
 
 LAAT ENKELE BESCHRIJVENDE STATISTISCHE WAARDES ZIEN.
 GEEF EEN OF MEERDERE BOXPLOTS EN HISTOGRAMMEN
@@ -118,23 +158,14 @@ KAN JE IETS ZEGGEN OVER DE DATAVERDELING?
 Hoe kleiner de steekproefgrootte (_sample size_) hoe lastiger het is de onderliggende verdeling vast te stellen. Speel maar eens met dit blokje code, en verander de steekproefgrootte (`n=`) in de `rnorm()` functie en de `breaks=` in de `hist()` functie. 
 Neem voor _n_ bijvoorbeeld achtereenvolgens 10, 100, 1000, 10000, 10000 en voor _breaks_ 5, 10, 50. Wanneer zie je een echte normaalverdeling verschijnen? 
 
+
 ```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+hist_data <- data.frame(x = rnorm(n = 10000))
+ggplot(data = hist_data,
+       mapping = aes(x = x)) +
+    geom_histogram(bins = 10, fill = "gold", colour = "black") +
+    theme_minimal()
 
-ggplot(data = biometric_data,
-       mapping = aes(x = sexse, y = lengte)) +
-      geom_boxplot() +
-      stat_summary(fun = "mean", geom = "point",
-               color = "gold")
-
-ggplot(data = biometric_data,
-       mapping = aes(x = sexse, y = breedte)) +
-      geom_boxplot() +
-      stat_summary(fun = "mean", geom = "point",
-               color = "gold")
-
-#+
-    #geom_histogram(bins = 10, fill = "gold", colour = "black") +
-    #theme_minimal()
 ```
 
 :::attention
@@ -142,21 +173,36 @@ ggplot(data = biometric_data,
 Beantwoord deze vragen:
 
 1. Wat gebeurt er met de vorm van de verdeling als `n` groter wordt?
+
+De grafiek wordt steeds hoger en stijler in toppen van de verschillende balken.
+
 2. Wat gebeurt er met de spreiding van de data (x-as) als `n` groter wordt, en kan je dat verklaren?
+
+Je hebt meer data punten en hierdoor wordt de data die je hebt verkregen accurater. De stapjes tussen de verschillende punten worden namelijk kleiner. En komt er een steeds een kleiner percentage van alle data in de eerste en laatste 17%.
+
 3. Waarom is bij zelfde instellingen voor `n` en `breaks` de uitkomst toch verschillend?
+
+!!!!??? kunnen jullie vragen wat de hel breaks is!!!!
+
 4. Welke minimale `n` geeft het meeste kans om een echte normaalverdeling te zien?
+
+Bij de 10000 zie je echt een normaalverdeling verschijnen, dit kan je herkennen dat er 2,5% van de grafiek op de eerste en laatst 1/6 deel van de grafiek zit.
+
 5. Wat voor bijzonders is er aan de hand met het `breaks` argument? Geeft de documentatie daar een verklaring voor?
+
+!!!!!???? wat de hel is breaks??!!!!
 :::
 
 ### Bronnen van variatie
 
 ONDERZOEK BRONNEN VAN VARIATIE
 BESPREEK DIT KORT
+????? kunnen jullie dit ook doen?
 
 ### De hypothese aannemen?
 
 VOER RELEVANTE STATISTISCHE TESTS UIT
-
+????? succes met een t-test ofzo idk hoe je die hier kan uitvoeren :)
 
 ## Reflectie op het experiment
 
@@ -165,9 +211,15 @@ Bespreek in je groep de volgende vragen en voeg de antwoorden toe aan je uitgewe
 
 1. Zijn de metingen tussen de verschillende meters ook (significant) verschillend? Zo ja, waardoor zou je de verschillen kunnen verklaren?
 
+??? :)
+
 2. Onderzoek de verschillen tussen mannen en vrouwen met betrekking tot hand lengte, handbreedte en de ratio.
 
+????? :)
+
 3. Zou je het protocol aanpassen na deze ervaring, of was hij voldoende duidelijk en reproduceerbaar?
+
+Het protocool zelf was duidelijk en reproduceerbaar, alleen om data te verzamelen dat meer betrouwbaar is kan er om meer informatie van de persoon worden gevraagd. Zoals lengte, leeftijd en gewicht van de persoon, deze factoren kunnen ook effect hebben op de verhoudingen van de hand van een persoon.
 :::
 
 
