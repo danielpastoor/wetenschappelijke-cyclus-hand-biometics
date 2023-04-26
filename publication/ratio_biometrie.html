@@ -1505,7 +1505,7 @@ afwijken in vergelijking met oudere volwassenen</p>
 <div id="onderzoeksvraag" class="section level2">
 <h2>Onderzoeksvraag</h2>
 <p>Wat is de relatie tussen de hand breedte en de hand lengte bij de
-verschillende sekse? :::</p>
+verschillende sekse?</p>
 </div>
 <div id="hypothese" class="section level2">
 <h2>0-Hypothese</h2>
@@ -1535,8 +1535,7 @@ groot mogelijk te houden.</p>
 locaties zonder internet-toegang.<br />
 </li>
 <li>Je laborant-ID: een unieke <em>identifier</em> die jou als
-onderzoeker identificeert. Neem hiervoor de laatste 4 cijfers van je
-studentnummer.</li>
+onderzoeker identificeert. Neem hiervoor een nummer.</li>
 </ol>
 </div>
 <div id="data-verzamelen" class="section level5">
@@ -1569,11 +1568,21 @@ verzameld.</p>
 <div id="uitvoering" class="section level2">
 <h2>Uitvoering</h2>
 <div class="attention">
-<p>Je moet de onderzoeksresultaten in deze vorm opslaan:</p>
+<p>De resultaten zijn in het volgende formaat opslagen. Waarbij de
+kolomen de volgende betekenis hebben:</p>
+<ol style="list-style-type: decimal">
+<li>id_onderzoeker = id van de onderzoeker.</li>
+<li>id_data = id voor de subject.</li>
+<li>lengte = de lengte van de hand.</li>
+<li>breedte = de breedte van de hand.</li>
+<li>sexse = het geslacht van de subject die kan of man of vrouw
+zijn.</li>
+</ol>
+Voorbeeld:
 <pre>
-laborant_ID,subject_ID,handlengte,handbreedte,sexe
-3241,G1_03,113,104,m
-<meer rijen met data>
+id_onderzoeker;id_data;lengte;breedte;sexse
+
+1;1;16.3;9.1;vrouw
 </pre>
 </div>
 </div>
@@ -1618,7 +1627,8 @@ ggplot(data = biometric_data) +
 </div>
 <div id="boxplot" class="section level4">
 <h4>Boxplot</h4>
-<p>Dit is en boxplot van alle verkegen data.</p>
+<p>Dit is een boxplot van alle verkegen data. Onder verdeeld tussen
+lengte en breedte</p>
 <pre class="r"><code>ggplot(data = biometric_data,
        mapping = aes(x = sexse, y = lengte)) +
       geom_boxplot() +

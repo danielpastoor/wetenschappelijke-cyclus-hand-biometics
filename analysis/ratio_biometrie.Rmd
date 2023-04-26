@@ -35,7 +35,6 @@ De data dat verzameld is voor deze casus is gedaan bij de een voornamelijke leef
 
 ## Onderzoeksvraag
 Wat is de relatie tussen de hand breedte en de hand lengte bij de verschillende sekse? 
-:::
 
 
 ## 0-Hypothese
@@ -61,7 +60,7 @@ Meten van de hand bij 20 mannen en vrouwen van verschillende leeftijden met vers
 
 1. Maatlat, schuifmaat of meetlint.  
 2. Spreadsheet om resultaten vast te leggen, met toegang hiertoe op locaties zonder internet-toegang.  
-3. Je laborant-ID: een unieke _identifier_ die jou als onderzoeker identificeert. Neem hiervoor de laatste 4 cijfers van je studentnummer.
+3. Je laborant-ID: een unieke _identifier_ die jou als onderzoeker identificeert. Neem hiervoor een nummer.
 
 ##### Data verzamelen
 
@@ -78,12 +77,20 @@ Ga door totdat van voldoende proefpersonen de gegevens zijn verzameld.
 ## Uitvoering
 
 :::attention
-Je moet de onderzoeksresultaten in deze vorm opslaan:  
+De resultaten zijn in het volgende formaat opslagen.
+Waarbij de kolomen de volgende betekenis hebben:
 
+1. id_onderzoeker = id van de onderzoeker.
+2. id_data = id voor de subject.
+3. lengte = de lengte van de hand.
+4. breedte = de breedte van de hand.
+5. sexse = het geslacht van de subject die kan of man of vrouw zijn.
+
+Voorbeeld:
 <pre>
-laborant_ID,subject_ID,handlengte,handbreedte,sexe
-3241,G1_03,113,104,m
-<meer rijen met data>
+id_onderzoeker;id_data;lengte;breedte;sexse
+
+1;1;16.3;9.1;vrouw
 </pre>
 :::
 
@@ -132,7 +139,7 @@ ggplot(data = biometric_data) +
 ```
 
 #### Boxplot
-Dit is en boxplot van alle verkegen data.
+Dit is een boxplot van alle verkegen data. Onder verdeeld tussen lengte en breedte
 ```{r boxplot, fig.asp=.6, out.width='60%', fig.align='center'}
 ggplot(data = biometric_data,
        mapping = aes(x = sexse, y = lengte)) +
