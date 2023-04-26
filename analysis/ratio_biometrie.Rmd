@@ -2,6 +2,11 @@
 title: "Biometrie onderzoek"
 authors: "<Daniël: 452871, Larissa: 432995 en Marian: >"
 date: "`r Sys.Date()`"
+knit: (function(inputFile, encoding) {
+      out_dir <- "../publication";
+      rmarkdown::render(inputFile,
+                        encoding=encoding,
+                        output_dir=file.path(dirname(inputFile), out_dir))})
 output:
   html_document:
     css: style.css
@@ -24,7 +29,7 @@ library(ggplot2)
 Er wordt onderzocht naar een verhouding tussen hand lengte en hand breedte bij mannen en vrouwen. En eventueel andere relaties, door middel van het opmeten van de dominante hand bij verschillende mensen.
 
 :::info
-Het staat je vrij een ander simpel te meten biometrisch kenmerk te onderzoeken. Voorwaarde is wel dat je twee aspecten meet (bv lichaamslengte en hoofdomtrek) en hun relatie onderzoekt, en ook dat je verschillende groepen onderzoekt (man/vrouw, jong/oud etc.). Ten slotte moeten verschillende studenten het meetwerk afwisselen en ook dat moet vastgelegd worden.
+De data dat verzameld is voor deze casus is gedaan bij de een voornamelijke leeftijd groep van 17 tot 25. Hierdoor kan de data afwijken in vergelijking met oudere volwassenen
 :::
 
 
@@ -89,8 +94,8 @@ laborant_ID,subject_ID,handlengte,handbreedte,sexe
 
 Om data vanuit een tekstbestand in te lezen kan je dit codeblok gebruiken, aannemend dat je data er exact zo uitzien als in bovenstaande voorbeeld:
 
-```{r demo-data-inlees, eval=FALSE}
-data_file <- "raw_data/data.csv"
+```{r data-inlees}
+data_file <- "../raw_data/data.csv"
 
 #data format: laborant_ID,subject_ID,handlengte,handbreedte,sexe
 biometric_data <- read.table(file = data_file,
@@ -98,12 +103,12 @@ biometric_data <- read.table(file = data_file,
                         sep = ";")
 ```
 
-```{r data-verwerk, eval=FALSE}
+```{r dataverwerk}
 # get mean of the 2 different data points
 biometric_dat <- aggregate(.~id_data ,data=biometric_data[ , c('id_data','lengte', 'breedte')], FUN = mean)
 sekse <- biometric_data[20:60, c('sexse')]
 
-data <- cbind(biometric_dat, sekse)
+formatted_data <- cbind(biometric_dat, sekse)
 
 
 ```
@@ -111,20 +116,31 @@ data <- cbind(biometric_dat, sekse)
 ### Beschrijvende statistiek
 #### Histogram
 Dit is een histogram van alle verkregen data.
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+```{r histogram, fig.asp=.6, out.width='60%', fig.align='center'}
 # histogramm van alle data
+
+ggplot(data = biometric_data) +
+       geom_histogram(mapping = aes(x = lengte,  fill=sexse, col=sexse, group=sexse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(biometric_data$lengte), 
+                                  max(biometric_data$lengte), by = 0.3))
+
+ggplot(data = biometric_data) +
+       geom_histogram(mapping = aes(x = breedte,  fill=sexse, col=sexse, group=sexse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(biometric_data$breedte), 
+                                  max(biometric_data$breedte), by = 0.3))
+
 ```
 
 #### Boxplot
 Dit is en boxplot van alle verkegen data.
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-ggplot(data = data,
-       mapping = aes(x = sekse, y = lengte)) +
+```{r boxplot, fig.asp=.6, out.width='60%', fig.align='center'}
+ggplot(data = biometric_data,
+       mapping = aes(x = sexse, y = lengte)) +
       geom_boxplot() +
       stat_summary(fun = "mean", geom = "point",
                color = "gold")
-ggplot(data = data,
-       mapping = aes(x = sekse, y = breedte)) +
+ggplot(data = biometric_data,
+       mapping = aes(x = sexse, y = breedte)) +
       geom_boxplot() +
       stat_summary(fun = "mean", geom = "point",
                color = "gold")
@@ -134,12 +150,12 @@ Hier kan er gezien worden dat de gemiddelde hand lengte en hand breedte hoger li
 
 #### Ratio bij hand lengte en hand breedte
 Als je de hand lengte deelt door de hand breedte krijg je een ratio. Dit vertelt je hoeveel langer je hand is in vergelijking met je hand breedte. 
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+```{r ratio-berekening, fig.asp=.6, out.width='60%', fig.align='center'}
 #determine ratio 
-breedte_man_mean <- mean((data[data$sekse == "man", ])$breedte)
-breedte_vrouw_mean <- mean((data[data$sekse == "vrouw", ])$breedte)
-lengte_man_mean <- mean((data[data$sekse == "man", ])$lengte)
-lengte_vrouw_mean <- mean((data[data$sekse == "vrouw", ])$lengte)
+breedte_man_mean <- mean((biometric_data[biometric_data$sexse == "man", ])$breedte)
+breedte_vrouw_mean <- mean((biometric_data[biometric_data$sexse == "vrouw", ])$breedte)
+lengte_man_mean <- mean((biometric_data[biometric_data$sexse == "man", ])$lengte)
+lengte_vrouw_mean <- mean((biometric_data[biometric_data$sexse == "vrouw", ])$lengte)
 ratio_vrouw <- (lengte_vrouw_mean/breedte_vrouw_mean)
 ratio_man <- (lengte_man_mean/breedte_man_mean)
 
@@ -158,15 +174,6 @@ KAN JE IETS ZEGGEN OVER DE DATAVERDELING?
 Hoe kleiner de steekproefgrootte (_sample size_) hoe lastiger het is de onderliggende verdeling vast te stellen. Speel maar eens met dit blokje code, en verander de steekproefgrootte (`n=`) in de `rnorm()` functie en de `breaks=` in de `hist()` functie. 
 Neem voor _n_ bijvoorbeeld achtereenvolgens 10, 100, 1000, 10000, 10000 en voor _breaks_ 5, 10, 50. Wanneer zie je een echte normaalverdeling verschijnen? 
 
-
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-hist_data <- data.frame(x = rnorm(n = 10000))
-ggplot(data = hist_data,
-       mapping = aes(x = x)) +
-    geom_histogram(bins = 10, fill = "gold", colour = "black") +
-    theme_minimal()
-
-```
 
 :::attention
 **Dit _experiment_ met de argumenten van `rnorm()` en `hist()` moet je opnemen in je eigen RMarkdown.**  
