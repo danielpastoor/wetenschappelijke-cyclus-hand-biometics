@@ -200,15 +200,19 @@ Je hebt meer data punten en hierdoor wordt de data die je hebt verkregen accurat
 
 3. Waarom is bij zelfde instellingen voor `n` en `breaks` de uitkomst toch verschillend?
 
-!!!!??? kunnen jullie vragen wat de hel breaks is!!!!
+Het aantal `breaks` en de waarde van `n` zijn twee verschillende dingen in ggplot2 R. Het aantal breaks bepaalt het aantal intervallen waarin de x-as of y-as wordt verdeeld en de waarde van n bepaalt het aantal labels op de x-as of y-as
 
 4. Welke minimale `n` geeft het meeste kans om een echte normaalverdeling te zien?
 
 Bij de 10000 zie je echt een normaalverdeling verschijnen, dit kan je herkennen dat er 2,5% van de grafiek op de eerste en laatst 1/6 deel van de grafiek zit.
 
 5. Wat voor bijzonders is er aan de hand met het `breaks` argument? Geeft de documentatie daar een verklaring voor?
+'breaks'argument bepaalt de verdeling van de gegevens op de x- of y-as. In het algemeen word het gebruikt op 2 manieren:
 
-!!!!!???? wat de hel is breaks??!!!!
+1. Een vector van specifieke waarden waarop de verdeling moet worden gebaseerd.
+2. Een enkel getal dat aangeeft hoeveel verdelingen moeten worden gebruikt.
+
+De breaks is niet echt heel bijzonder behalve dan wat er hier boven benoemd is. Verder kan je uitgebreid in de documentatie lezen wat breaks zijn.
 :::
 
 ### Bronnen van variatie
