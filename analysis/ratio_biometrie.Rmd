@@ -1,6 +1,6 @@
 ---
 title: "Biometrie onderzoek"
-authors: "<Daniël: 452871, Larissa: 432995 en Marian: >"
+authors: "<Daniël: 452871, Larissa: 432995 en Marian:446030 >"
 date: "`r Sys.Date()`"
 knit: (function(inputFile, encoding) {
       out_dir <- "../publication";
@@ -29,21 +29,22 @@ library(ggplot2)
 Er wordt onderzocht naar een verhouding tussen hand lengte en hand breedte bij mannen en vrouwen. En eventueel andere relaties, door middel van het opmeten van de dominante hand bij verschillende mensen.
 
 :::info
-De data dat verzameld is voor deze casus is gedaan bij de een voornamelijke leeftijd groep van 17 tot 25. Hierdoor kan de data afwijken in vergelijking met oudere volwassenen
+Het staat je vrij een ander simpel te meten biometrisch kenmerk te onderzoeken. Voorwaarde is wel dat je twee aspecten meet (bv lichaamslengte en hoofdomtrek) en hun relatie onderzoekt, en ook dat je verschillende groepen onderzoekt (man/vrouw, jong/oud etc.). Ten slotte moeten verschillende studenten het meetwerk afwisselen en ook dat moet vastgelegd worden.
 :::
 
 
 ## Onderzoeksvraag
-Wat is de relatie tussen de hand breedte en de hand lengte bij de verschillende sekse? 
+Wat is de relatie tussen de handbreedte en de handlengte bij de verschillende sekse? 
+:::
 
 
 ## 0-Hypothese
-Mannen hebben een grotere verhouding dan vrouwen tussen hand breedte en hand lengte.
+Er zit geen verschil in ratio van handbreedte en handlengte tussen mannen en vrouwen,
 
 
 
 ## Hypothese
-Mannen en vrouwen hebben geen verschil in realtie met hand breedte en hand lengte.
+Mannen hebben een hogere ratio in handbreedte en handlengte dan vrouwen.
 
 
 
@@ -60,7 +61,7 @@ Meten van de hand bij 20 mannen en vrouwen van verschillende leeftijden met vers
 
 1. Maatlat, schuifmaat of meetlint.  
 2. Spreadsheet om resultaten vast te leggen, met toegang hiertoe op locaties zonder internet-toegang.  
-3. Je laborant-ID: een unieke _identifier_ die jou als onderzoeker identificeert. Neem hiervoor een nummer.
+3. Je laborant-ID: een unieke _identifier_ die jou als onderzoeker identificeert. Neem hiervoor de laatste 4 cijfers van je studentnummer.
 
 ##### Data verzamelen
 
@@ -76,21 +77,14 @@ Ga door totdat van voldoende proefpersonen de gegevens zijn verzameld.
 
 ## Uitvoering
 
+
 :::attention
-De resultaten zijn in het volgende formaat opslagen.
-Waarbij de kolomen de volgende betekenis hebben:
+Je moet de onderzoeksresultaten in deze vorm opslaan:  
 
-1. id_onderzoeker = id van de onderzoeker.
-2. id_data = id voor de subject.
-3. lengte = de lengte van de hand.
-4. breedte = de breedte van de hand.
-5. sexse = het geslacht van de subject die kan of man of vrouw zijn.
-
-Voorbeeld:
 <pre>
-id_onderzoeker;id_data;lengte;breedte;sexse
-
-1;1;16.3;9.1;vrouw
+laborant_ID,subject_ID,handlengte,handbreedte,sexe
+3241,G1_03,113,104,m
+<meer rijen met data>
 </pre>
 :::
 
@@ -101,8 +95,8 @@ id_onderzoeker;id_data;lengte;breedte;sexse
 
 Om data vanuit een tekstbestand in te lezen kan je dit codeblok gebruiken, aannemend dat je data er exact zo uitzien als in bovenstaande voorbeeld:
 
-```{r data-inlees}
-data_file <- "../raw_data/data.csv"
+```{r demo-data-inlees, eval=FALSE}
+data_file <- "raw_data/data.csv"
 
 #data format: laborant_ID,subject_ID,handlengte,handbreedte,sexe
 biometric_data <- read.table(file = data_file,
@@ -110,12 +104,12 @@ biometric_data <- read.table(file = data_file,
                         sep = ";")
 ```
 
-```{r dataverwerk}
+```{r data-verwerk, eval=FALSE}
 # get mean of the 2 different data points
 biometric_dat <- aggregate(.~id_data ,data=biometric_data[ , c('id_data','lengte', 'breedte')], FUN = mean)
 sekse <- biometric_data[20:60, c('sexse')]
 
-formatted_data <- cbind(biometric_dat, sekse)
+data <- cbind(biometric_dat, sekse)
 
 
 ```
@@ -123,31 +117,20 @@ formatted_data <- cbind(biometric_dat, sekse)
 ### Beschrijvende statistiek
 #### Histogram
 Dit is een histogram van alle verkregen data.
-```{r histogram, fig.asp=.6, out.width='60%', fig.align='center'}
+```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
 # histogramm van alle data
-
-ggplot(data = biometric_data) +
-       geom_histogram(mapping = aes(x = lengte,  fill=sexse, col=sexse, group=sexse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
-  scale_x_continuous(breaks = seq(min(biometric_data$lengte), 
-                                  max(biometric_data$lengte), by = 0.3))
-
-ggplot(data = biometric_data) +
-       geom_histogram(mapping = aes(x = breedte,  fill=sexse, col=sexse, group=sexse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
-  scale_x_continuous(breaks = seq(min(biometric_data$breedte), 
-                                  max(biometric_data$breedte), by = 0.3))
-
 ```
 
 #### Boxplot
-Dit is een boxplot van alle verkegen data. Onder verdeeld tussen lengte en breedte
-```{r boxplot, fig.asp=.6, out.width='60%', fig.align='center'}
-ggplot(data = biometric_data,
-       mapping = aes(x = sexse, y = lengte)) +
+Dit is en boxplot van alle verkegen data.
+```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+ggplot(data = data,
+       mapping = aes(x = sekse, y = lengte)) +
       geom_boxplot() +
       stat_summary(fun = "mean", geom = "point",
                color = "gold")
-ggplot(data = biometric_data,
-       mapping = aes(x = sexse, y = breedte)) +
+ggplot(data = data,
+       mapping = aes(x = sekse, y = breedte)) +
       geom_boxplot() +
       stat_summary(fun = "mean", geom = "point",
                color = "gold")
@@ -157,18 +140,30 @@ Hier kan er gezien worden dat de gemiddelde hand lengte en hand breedte hoger li
 
 #### Ratio bij hand lengte en hand breedte
 Als je de hand lengte deelt door de hand breedte krijg je een ratio. Dit vertelt je hoeveel langer je hand is in vergelijking met je hand breedte. 
-```{r ratio-berekening, fig.asp=.6, out.width='60%', fig.align='center'}
+
+Hieronder is een histogram van de ratios.
+```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+#histogram ratios of both males and females:
+ggplot(data = data) +
+       geom_histogram(mapping = aes(x = ratio,  fill=sekse, col=sekse, group=sekse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(data$ratio), 
+                                  max(data$ratio), by = 0.3))
+
+
+
+
 #determine ratio 
-breedte_man_mean <- mean((biometric_data[biometric_data$sexse == "man", ])$breedte)
-breedte_vrouw_mean <- mean((biometric_data[biometric_data$sexse == "vrouw", ])$breedte)
-lengte_man_mean <- mean((biometric_data[biometric_data$sexse == "man", ])$lengte)
-lengte_vrouw_mean <- mean((biometric_data[biometric_data$sexse == "vrouw", ])$lengte)
-ratio_vrouw <- (lengte_vrouw_mean/breedte_vrouw_mean)
-ratio_man <- (lengte_man_mean/breedte_man_mean)
-
-print(paste("De ratio voor man is: ", ratio_man))
-print(paste("De ratio voor vrouw is: ", ratio_vrouw))
-
+data$ratio <- data$lengte/data$breedte
+#Shapior Wilk test on ratios
+sw_test <- shapiro.test(data$ratio)
+print(sw_test)
+# Mann-Whitney test on ratios of males and females
+result <- wilcox.test(ratio~sekse, data=data)
+print(result)
+#standard deviation of ratios of males and females
+sd_ratios <- sd(data$ratio)
+print('This is the standard deviation of the ratios:')
+print(sd_ratios)
 ```
 
 LAAT ENKELE BESCHRIJVENDE STATISTISCHE WAARDES ZIEN.
@@ -181,6 +176,15 @@ KAN JE IETS ZEGGEN OVER DE DATAVERDELING?
 Hoe kleiner de steekproefgrootte (_sample size_) hoe lastiger het is de onderliggende verdeling vast te stellen. Speel maar eens met dit blokje code, en verander de steekproefgrootte (`n=`) in de `rnorm()` functie en de `breaks=` in de `hist()` functie. 
 Neem voor _n_ bijvoorbeeld achtereenvolgens 10, 100, 1000, 10000, 10000 en voor _breaks_ 5, 10, 50. Wanneer zie je een echte normaalverdeling verschijnen? 
 
+
+```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+hist_data <- data.frame(x = rnorm(n = 10000))
+ggplot(data = hist_data,
+       mapping = aes(x = x)) +
+    geom_histogram(bins = 10, fill = "gold", colour = "black") +
+    theme_minimal()
+
+```
 
 :::attention
 **Dit _experiment_ met de argumenten van `rnorm()` en `hist()` moet je opnemen in je eigen RMarkdown.**  
@@ -209,14 +213,15 @@ Bij de 10000 zie je echt een normaalverdeling verschijnen, dit kan je herkennen 
 
 ### Bronnen van variatie
 
-ONDERZOEK BRONNEN VAN VARIATIE
-BESPREEK DIT KORT
-????? kunnen jullie dit ook doen?
+De mogelijke bronnen van variatie in dit experiment zouden kunnen zijn dat dat wij als groepsleden verschillende beginpunten hebben gebruikt bij het meten van de handen. Ook kan het zo zijn dat we de liniaal anders hebben afgelezen. 
 
 ### De hypothese aannemen?
 
-VOER RELEVANTE STATISTISCHE TESTS UIT
-????? succes met een t-test ofzo idk hoe je die hier kan uitvoeren :)
+Voordat er een conclusie getrokken kon worden over het experiment is er bepaald of de data normaal verdeeld was. Hiervoor is eerst de Shapiro Wilk test uitgevoerd. Uit deze test kwam een w-waarde van 0.93418 en een p-waarde van 0.01992. Hoe dichterbij de w-waarde bij 1 zit, hoe groter de kans is dat de data normaal verdeeld is. In dit geval is er dus een kans dat de data niet normaal verdeeld is. Verder ligt de p-waarde onder de 0.05, wat ook duidt op een niet normaal verdeelde data set. Als er echter naar de histogram wordt gekeken van de ratios blijkt de data toch wel normaal verdeeld te zijn.
+We zijn er voor de zekerheid vanuit gegaan dat de data niet normaal verdeeld is en hebben daarom de Mann Whitney test op de data uitgevoerd. Hieruit kwam een p-waarde van 0.6669. Dit betekent dat er geen significant verschil zit tussen de ratio van de mannen en de ratio van de vrouwen en de nulhypothese dus niet verworpen wordt.
+
+Verder is ook de standaarddeviatie berekent. De standaarddeviatie is 0.1088, wat betekent dat er niet veel verschil tussen de waardes zit. 
+
 
 ## Reflectie op het experiment
 
@@ -225,11 +230,11 @@ Bespreek in je groep de volgende vragen en voeg de antwoorden toe aan je uitgewe
 
 1. Zijn de metingen tussen de verschillende meters ook (significant) verschillend? Zo ja, waardoor zou je de verschillen kunnen verklaren?
 
-??? :)
+Er zit verschil tussen de metingen van verschillende meters. Dit kan bijvoorbeeld komen doordat de liniaal anders afgelezen werd door de verschillende meters.
 
 2. Onderzoek de verschillen tussen mannen en vrouwen met betrekking tot hand lengte, handbreedte en de ratio.
 
-????? :)
+Uit de resultaten is gebleken dat mannen zowel bredere als langere handen hebben dan vrouwen. Er zit echter geen significant verschil in ratio van de handbreedte en handlengte tussen mannen en vrouwen.
 
 3. Zou je het protocol aanpassen na deze ervaring, of was hij voldoende duidelijk en reproduceerbaar?
 
@@ -242,3 +247,4 @@ Het protocool zelf was duidelijk en reproduceerbaar, alleen om data te verzamele
 Voor de verwerking en analyse van je eigen data maak je gebruik van het aangeleverde template RMarkdown document. Daarin doorloop je dezelfde onderzoek stappen als hieronder, maar dan met je eigen data. Aan het einde van de dag gaat dat document, in originele en "geknitte" vorm, samen met je databestand, in een git repo die is opgezet volgens voorschift in de cursushandleiding. De link hiernaar toe gaat in je portfolio op eJournal. Let op dat je _alle_ stappen hebt doorlopen voordat je inlevert. Gebruik ook de RStudio spellingscontrole!  
 Vergeet niet jullie namen en studentnummers bovenaan de markdown te zetten!
 :::
+
