@@ -116,9 +116,17 @@ data <- cbind(biometric_dat, sekse)
 
 ### Beschrijvende statistiek
 #### Histogram
-Dit is een histogram van alle verkregen data.
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-# histogramm van alle data
+# histogram handlength in both males and females:
+ggplot(data = data) +
+       geom_histogram(mapping = aes(x = lengte,  fill=sekse, col=sekse, group=sekse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(data$lengte), 
+                                  max(data$lengte), by = 0.3))
+
+# histogram handwidth in both males and females:
+ggplot(data = data) +
+       geom_histogram(mapping = aes(x = breedte,  fill=sekse, col=sekse, group=sekse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(data$breedte), 
+                                  max(data$breedte), by = 0.3))
 ```
 
 #### Boxplot
