@@ -118,22 +118,33 @@ data <- cbind(biometric_dat, sekse)
 #### Histogram
 Dit is een histogram van alle verkregen data.
 ```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-# histogramm van alle data
+# histogram handlength in both males and females:
+ggplot(data = data) +
+       geom_histogram(mapping = aes(x = lengte,  fill=sekse, col=sekse, group=sekse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(data$lengte), 
+                                  max(data$lengte), by = 0.3)) + xlab(" Handlength in both males and females in cm")
+
+# histogram handwidth in both males and females:
+ggplot(data = data) +
+       geom_histogram(mapping = aes(x = breedte,  fill=sekse, col=sekse, group=sekse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(data$breedte), 
+                                  max(data$breedte), by = 0.3)) + xlab(" Handwidth in both males and females in cm")
 ```
 
 #### Boxplot
 Dit is en boxplot van alle verkegen data.
 ```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
 ggplot(data = data,
-       mapping = aes(x = sekse, y = lengte)) +
+       mapping = aes(x = sekse, y = lengte, color=sekse)) +
       geom_boxplot() +
-      stat_summary(fun = "mean", geom = "point",
-               color = "gold")
+      stat_summary(fun = "mean", geom = "point") +
+  ylab("Length in cm")
+
 ggplot(data = data,
-       mapping = aes(x = sekse, y = breedte)) +
+       mapping = aes(x = sekse, y = breedte, color=sekse)) +
       geom_boxplot() +
-      stat_summary(fun = "mean", geom = "point",
-               color = "gold")
+      stat_summary(fun = "mean", geom = "point") + 
+  ylab("Width in cm")
 
 ```
 Hier kan er gezien worden dat de gemiddelde hand lengte en hand breedte hoger liggen bij de man dan bij de vrouw. Ook kan er gezien worden dat de gemiddelde handbreedte hoger ligt in het bereik dan bij alle overige data.
@@ -143,11 +154,11 @@ Als je de hand lengte deelt door de hand breedte krijg je een ratio. Dit vertelt
 
 Hieronder is een histogram van de ratios.
 ```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-#histogram ratios of both males and females:
 ggplot(data = data) +
-       geom_histogram(mapping = aes(x = ratio,  fill=sekse, col=sekse, group=sekse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
-  scale_x_continuous(breaks = seq(min(data$ratio), 
-                                  max(data$ratio), by = 0.3))
+  geom_histogram(mapping = aes(x = ratio,  fill=sekse, col=sekse, group=sekse), 
+                 bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(data$ratio), max(data$ratio), by = 0.3)) +
+  xlab("Ratio handlength/handwidth of both males and females")
 
 
 
