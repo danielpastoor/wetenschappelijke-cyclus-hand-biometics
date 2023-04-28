@@ -95,8 +95,8 @@ laborant_ID,subject_ID,handlengte,handbreedte,sexe
 
 Om data vanuit een tekstbestand in te lezen kan je dit codeblok gebruiken, aannemend dat je data er exact zo uitzien als in bovenstaande voorbeeld:
 
-```{r demo-data-inlees, eval=FALSE}
-data_file <- "raw_data/data.csv"
+```{r demo-data-inlees}
+data_file <- "../raw_data/data.csv"
 
 #data format: laborant_ID,subject_ID,handlengte,handbreedte,sexe
 biometric_data <- read.table(file = data_file,
@@ -104,7 +104,7 @@ biometric_data <- read.table(file = data_file,
                         sep = ";")
 ```
 
-```{r data-verwerk, eval=FALSE}
+```{r data-verwerk}
 # get mean of the 2 different data points
 biometric_dat <- aggregate(.~id_data ,data=biometric_data[ , c('id_data','lengte', 'breedte')], FUN = mean)
 sekse <- biometric_data[20:60, c('sexse')]
@@ -117,7 +117,7 @@ data <- cbind(biometric_dat, sekse)
 ### Beschrijvende statistiek
 #### Histogram
 Dit is een histogram van alle verkregen data.
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+```{r histogram-all-data, fig.asp=.6, out.width='60%', fig.align='center'}
 # histogram handlength in both males and females:
 ggplot(data = data) +
        geom_histogram(mapping = aes(x = lengte,  fill=sekse, col=sekse, group=sekse), bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
@@ -133,7 +133,7 @@ ggplot(data = data) +
 
 #### Boxplot
 Dit is en boxplot van alle verkegen data.
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+```{r box-plot-all-data, fig.asp=.6, out.width='60%', fig.align='center'}
 ggplot(data = data,
        mapping = aes(x = sekse, y = lengte, color=sekse)) +
       geom_boxplot() +
@@ -153,16 +153,7 @@ Hier kan er gezien worden dat de gemiddelde hand lengte en hand breedte hoger li
 Als je de hand lengte deelt door de hand breedte krijg je een ratio. Dit vertelt je hoeveel langer je hand is in vergelijking met je hand breedte. 
 
 Hieronder is een histogram van de ratios.
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
-ggplot(data = data) +
-  geom_histogram(mapping = aes(x = ratio,  fill=sekse, col=sekse, group=sekse), 
-                 bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
-  scale_x_continuous(breaks = seq(min(data$ratio), max(data$ratio), by = 0.3)) +
-  xlab("Ratio handlength/handwidth of both males and females")
-
-
-
-
+```{r ratio-histogram, fig.asp=.6, out.width='60%', fig.align='center'}
 #determine ratio 
 data$ratio <- data$lengte/data$breedte
 #Shapior Wilk test on ratios
@@ -175,6 +166,14 @@ print(result)
 sd_ratios <- sd(data$ratio)
 print('This is the standard deviation of the ratios:')
 print(sd_ratios)
+
+ggplot(data = data) +
+  geom_histogram(mapping = aes(x = ratio,  fill=sekse, col=sekse, group=sekse), 
+                 bins = 30, alpha = 0.05, position="dodge", right=TRUE) +
+  scale_x_continuous(breaks = seq(min(data$ratio), max(data$ratio), by = 0.3)) +
+  xlab("Ratio handlength/handwidth of both males and females")
+
+
 ```
 
 LAAT ENKELE BESCHRIJVENDE STATISTISCHE WAARDES ZIEN.
@@ -188,7 +187,7 @@ Hoe kleiner de steekproefgrootte (_sample size_) hoe lastiger het is de onderlig
 Neem voor _n_ bijvoorbeeld achtereenvolgens 10, 100, 1000, 10000, 10000 en voor _breaks_ 5, 10, 50. Wanneer zie je een echte normaalverdeling verschijnen? 
 
 
-```{r sampling-demo, fig.asp=.6, out.width='60%', fig.align='center'}
+```{r diffrences-histogram, fig.asp=.6, out.width='60%', fig.align='center'}
 hist_data <- data.frame(x = rnorm(n = 10000))
 ggplot(data = hist_data,
        mapping = aes(x = x)) +
