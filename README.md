@@ -18,19 +18,18 @@ Er wordt onderzocht naar een verhouding tussen hand lengte en hand breedte bij m
 ## Usage
 Clone de repo en open het RMD-bestand uit de 'analysis' directory.
 
-## Documentation
-
-TBD
-
 ## Help 🙋‍♂️ 
 
 Bij problemen contacteer:
 Daniël Pastoor: d.h.s.pastoor@st.hanze.nl
+
 Marian Hasan: m.hasan@st.hanze.nl
+
 Larissa Voshol: l.voshol@st.hanze.nl
 
 ### FAQ 
 Hier vindt je antwoorden op de meest gestelde vragen?
 
 Q: Is de data realistisch
+
 A: yes.
