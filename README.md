@@ -21,6 +21,7 @@ Clone de repo en open het RMD-bestand uit de 'analysis' directory.
 ## Help 🙋‍♂️ 
 
 Bij problemen contacteer:
+
 Daniël Pastoor: d.h.s.pastoor@st.hanze.nl
 
 Marian Hasan: m.hasan@st.hanze.nl
