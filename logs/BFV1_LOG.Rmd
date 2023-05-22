@@ -1,0 +1,83 @@
+---
+title: "Log file"
+author: "Larissa Voshol"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+
+# Preliminaries
+
+
+# Introduction
+
+## Goal
+
+## Data collection
+
+## Theory
+
+
+# Experimental work
+
+##10-5-2023
+voorbereiding voor het meten, uitwerken van eerste versie van protocol.
+Uittesten van spirometer op elkaar.
+```{r testdata}
+subject <- c("Marian", "Daniel", "Larissa", "Marian", "Daniel", "Larissa")
+peakflow <- c(220, 450, 360, 240, 470, 360)
+which_method <-c("volgens protocol", "volgens protocol", "volgens protocol","nieuw protocol waarbij we een aantal tussenstappen hebben verwijderd, bij het gebruik van de spirometer", "nieuw protocol waarbij we een aantal tussenstappen hebben verwijderd, bij het gebruik van de spirometer", "nieuw protocol waarbij we een aantal tussenstappen hebben verwijderd, bij het gebruik van de spirometer")
+
+uittest_data <- data.frame(subjects, peakflow, which_method)
+
+```
+Tijdens is gebleken dat we een aantal stappen konden verwijderen uit het oude protocol. Omdat we destijds nog niet het model van de spirometer wisten en we dit heel algemeen moesten houden.
+
+##11-5-2023
+Data gemeten met spirometer.
+
+##13-5-2023
+Data gemeten met spirometer.
+
+##15-05-2023
+
+### Openen van data
+
+Data is geopend.
+
+```{r}
+
+data_file <- "raw_data/Data_breath.csv"
+data <- read.table(file = data_file,
+                          header = TRUE,
+                          sep = ",")
+data
+
+```
+De data is prima, dataframe is zoals verwacht is.
+Deze data ververvolgens op verschillende manieren geplot.
+
+```{r}
+library(ggplot2)
+ggplot(data = data, aes(x = Sport , y = Peak_flow, colour = Sex)) + 
+  geom_point()
+
+```
+
+##22-5-2023
+Vervolg op het plotten van de data. Het verschil tussen peakflow voor en na 10 jumpingjacks.
+
+```{r}
+
+data <- data %>% group_by(Subject_id) %>% mutate(Diff_peak_flow = Peak_flow[2] - Peak_flow[1])
+
+data %>%
+  select(Sport) %>%
+  mutate( sporting = case_when(Sport == c("Altheletiek", "Korfbal", "Sportschool", "Voetbal", "Volleybal", "Zwemmen") ~ "Yes", .default = "No"))
+
+ggplot(data = data,
+       mapping = aes(x = ))
+
+```
